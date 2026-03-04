@@ -1,123 +1,75 @@
-from modules.mysql import MySQL
-from modules.aluno import Aluno
+from PySide6.QtWidgets import (
+    QApplication,
+    QVBoxLayout,
+    QPushButton,
+    QWidget
+)
+
+from screen.cadastrar import Cadastrar
+from screen.listar import Listar
 
 import sys
 
-from PySide6.QtWidgets import (
-    QApplication, 
-    QWidget,
-    QVBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPushButton,
-    QMessageBox
-)
-
-class TelaCadastro():
-    def __init__(self):
-        self.app = QApplication(sys.argv)
-        self.janela = QWidget()
-        self.layout = QVBoxLayout()
-        self.banco = MySQL()
-
-        self.campos = {}
-
-        self.configurar_janela()
-        self.criar_componentes()
-
-    def configurar_janela(self):
-        self.janela.setWindowTitle("Cadastrar Aluno")
-
-        screen = self.app.primaryScreen().geometry()
-        largura = int(screen.width() * 0.4)
-        altura = int(screen.height() * 0.6)
-
-        self.janela.resize(largura, altura)
-        self.janela.setMinimumSize(400, 500)
-        self.janela.setLayout(self.layout)
-
-    def criar_componentes(self):
-        componentes = {
-            "nome": "Digite seu nome:",
-            "email": "Digite seu email:",
-            "cpf": "Digite seu cpf:",
-            "telefone": "Digite seu telefone:",
-            "endereco": "Digite seu endereco:"
+class App:
+    def aplicar_estilo(self):
+        self.janela.setStyleSheet("""
+        QWidget {
+            background-color: #0f172a;
+            font-family: Arial;
+            color: white;
         }
 
-        for chave, valor in componentes.items():
-            label = QLabel(valor)
-            campo = QLineEdit()
+        QPushButton {
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 40px;
+        }
 
-            self.layout.addWidget(label)
-            self.layout.addWidget(campo)
+        QPushButton:hover {
+            background-color: #2563eb;
+            border: 2px solid #2563eb;
+        }
 
-            self.campos[chave] = campo
+        QPushButton:pressed {
+            background-color: #1e40af;
+        }
+    """)
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        
+        self.janela = QWidget()
+        self.layout = QVBoxLayout()
+        
+        self.janela.setWindowTitle("Sistema Universidade")
+        self.janela.resize(400, 200)
+        self.janela.setLayout(self.layout)
+        
+        self.criar_botoes()
+        self.aplicar_estilo()
+        
+        self.janela.show()
 
-        botao_cadastro = QPushButton("Cadastrar")
-        self.layout.addWidget(botao_cadastro)
-
-        botao_cadastro.clicked.connect(self.cadastrar)
-
-    def validar_campos(self):
-        dados = {chave: campo.text().strip() for chave, campo in self.campos.items()}
-
-        for chave, valor in dados.items():
-            if not valor:
-                return False, f"O campo '{chave}' não pode estar vazio."
-
-        if not dados["cpf"].isdigit() or len(dados["cpf"]) != 11:
-            return False, "CPF deve conter exatamente 11 números."
-
-        return True, dados
-
-    def cadastrar(self):
-
-        valido, resultado = self.validar_campos()
-
-        if not valido:
-            QMessageBox.warning(
-                self.janela,
-                "Validação",
-                resultado
-            )
-            return
-
-        aluno = Aluno(
-            resultado["nome"],
-            resultado["email"],
-            resultado["cpf"],
-            resultado["telefone"],
-            resultado["endereco"],
-        )
-
-        try:
-            self.banco.connect()
-            aluno.cadastrar(self.banco)
-
-            QMessageBox.information(
-                self.janela,
-                "Sucesso",
-                "Aluno Cadastrado!"
-            )
-            self.limpar_campos()
-
-        except Exception as e:
-            QMessageBox.critical(
-                self.janela,
-                "Erro",
-                f"Erro ao Cadastrar: {e}"
-            )
-
-        finally:
-            self.banco.disconnect()
-
-    def limpar_campos(self):
-        for campo in self.campos.values():
-            campo.clear()
+    def criar_botoes(self):
+        botao_listar = QPushButton("Listar")
+        self.layout.addWidget(botao_listar)
+        botao_listar.clicked.connect(self.abrir_listagem)
+        
+        botao_cadastrar = QPushButton("Cadastrar")
+        self.layout.addWidget(botao_cadastrar)
+        botao_cadastrar.clicked.connect(self.abrir_cadastro)
+        
+    def abrir_listagem(self):
+        self.tela_listagem = Listar(self.app)
+        self.tela_listagem.janela.show()
+        
+    def abrir_cadastro(self):
+        self.tela_cadastro = Cadastrar(self.app)
+        self.tela_cadastro.janela.show()
 
 if __name__ == "__main__":
-    tela = TelaCadastro()
-    tela.janela.show()
-
-    sys.exit(tela.app.exec())
+    system = App()
+    sys.exit(system.app.exec())

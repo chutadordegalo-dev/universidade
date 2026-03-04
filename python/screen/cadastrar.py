@@ -15,6 +15,54 @@ from PySide6.QtGui import QGuiApplication
 
 
 class Cadastrar:
+    def aplicar_estilo(self):
+        self.janela.setStyleSheet("""
+        QWidget {
+            background-color: #0f172a;
+            font-family: Arial;
+            font-size: 14px;
+            color: #f1f5f9;
+        }
+
+        QLabel {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #cbd5e1;
+        }
+
+        QLineEdit {
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 8px;
+            color: white;
+        }
+
+        QLineEdit:focus {
+            border: 2px solid #38bdf8;
+            background-color: #0f172a;
+        }
+
+        QPushButton {
+            background-color: #2563eb;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        QPushButton:hover {
+            background-color: #1d4ed8;
+        }
+
+        QPushButton:pressed {
+            background-color: #1e40af;
+        }
+
+        QMessageBox {
+            background-color: #1e293b;
+        }
+    """)
     def __init__(self, app):
         self.app = app
         self.janela = QWidget()
@@ -22,9 +70,10 @@ class Cadastrar:
         self.banco = MySQL()
 
         self.campos = {}
-
+        
         self.configurar_janela()
         self.criar_componentes()
+        self.aplicar_estilo()
 
     def configurar_janela(self):
         self.janela.setWindowTitle("Cadastrar Aluno")
