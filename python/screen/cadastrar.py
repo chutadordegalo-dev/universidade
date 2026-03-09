@@ -15,54 +15,7 @@ from PySide6.QtGui import QGuiApplication
 
 
 class Cadastrar:
-    def aplicar_estilo(self):
-        self.janela.setStyleSheet("""
-        QWidget {
-            background-color: #0f172a;
-            font-family: Arial;
-            font-size: 14px;
-            color: #f1f5f9;
-        }
 
-        QLabel {
-            margin-top: 10px;
-            font-weight: bold;
-            color: #cbd5e1;
-        }
-
-        QLineEdit {
-            background-color: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            padding: 8px;
-            color: white;
-        }
-
-        QLineEdit:focus {
-            border: 2px solid #38bdf8;
-            background-color: #0f172a;
-        }
-
-        QPushButton {
-            background-color: #2563eb;
-            border-radius: 10px;
-            padding: 10px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        QPushButton:hover {
-            background-color: #1d4ed8;
-        }
-
-        QPushButton:pressed {
-            background-color: #1e40af;
-        }
-
-        QMessageBox {
-            background-color: #1e293b;
-        }
-    """)
     def __init__(self, app):
         self.app = app
         self.janela = QWidget()
@@ -70,7 +23,7 @@ class Cadastrar:
         self.banco = MySQL()
 
         self.campos = {}
-        
+
         self.configurar_janela()
         self.criar_componentes()
         self.aplicar_estilo()
@@ -78,13 +31,61 @@ class Cadastrar:
     def configurar_janela(self):
         self.janela.setWindowTitle("Cadastrar Aluno")
 
-        # 🔹 Redimensiona dinamicamente com base na tela
         tela = QGuiApplication.primaryScreen().availableGeometry()
         largura = int(tela.width() * 0.4)
         altura = int(tela.height() * 0.6)
 
         self.janela.resize(largura, altura)
         self.janela.setLayout(self.layout)
+
+    def aplicar_estilo(self):
+        self.janela.setStyleSheet("""
+        QWidget {
+            background-color: #111827;
+            font-family: Arial;
+            font-size: 14px;
+            color: #f9fafb;
+        }
+
+        QLabel {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #d1d5db;
+        }
+
+        QLineEdit {
+            background-color: #1f2937;
+            border: 2px solid #374151;
+            border-radius: 8px;
+            padding: 8px;
+            color: white;
+        }
+
+        QLineEdit:focus {
+            border: 2px solid #8b5cf6;
+            background-color: #111827;
+        }
+
+        QPushButton {
+            background-color: #7c3aed;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        QPushButton:hover {
+            background-color: #6d28d9;
+        }
+
+        QPushButton:pressed {
+            background-color: #5b21b6;
+        }
+
+        QMessageBox {
+            background-color: #1f2937;
+        }
+        """)
 
     def criar_componentes(self):
         componentes = {
@@ -109,7 +110,6 @@ class Cadastrar:
 
         self.botao_Cadastrar.clicked.connect(self.cadastrar)
 
-    # 🔹 MÉTODO DE VALIDAÇÃO
     def validar_campos(self):
         for chave, campo in self.campos.items():
             if not campo.text().strip():
@@ -127,7 +127,6 @@ class Cadastrar:
                 "Validação",
                 "Email inválido."
             )
-            self.campos["email"].setFocus()
             return False
 
         if not self.campos["cpf"].text().isdigit():
@@ -136,13 +135,12 @@ class Cadastrar:
                 "Validação",
                 "CPF deve conter apenas números."
             )
-            self.campos["cpf"].setFocus()
             return False
 
         return True
 
     def cadastrar(self):
-        # 🔹 Só continua se a validação passar
+
         if not self.validar_campos():
             return
 
@@ -172,8 +170,8 @@ class Cadastrar:
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    
-    tela = Cadastrar()
+
+    tela = Cadastrar(app)
     tela.janela.show()
-   
-    sys.exit(tela.app.exec())
+
+    sys.exit(app.exec())

@@ -25,7 +25,6 @@ class Listar:
         self.criar_componentes()
         self.carregar_dados()
 
-
     def configurar_janela(self):
         self.janela.setWindowTitle("📋 Listagem de Alunos")
 
@@ -36,15 +35,14 @@ class Listar:
         self.janela.resize(largura, altura)
         self.janela.setLayout(self.layout)
 
-        # 🎨 ESTILO DA JANELA
         self.janela.setStyleSheet("""
-            QWidget {
-                background-color: #f4f6f9;
-                font-family: Arial;
-                font-size: 14px;
-            }
+        QWidget {
+            background-color: #111827;
+            font-family: Arial;
+            font-size: 14px;
+            color: white;
+        }
         """)
-
 
     def criar_componentes(self):
 
@@ -54,63 +52,60 @@ class Listar:
             ["ID", "Nome", "Email", "CPF", "Telefone", "Matrícula"]
         )
 
-        # 📏 Ajusta colunas automaticamente
         self.tabela.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        # 🎨 ESTILO DA TABELA
         self.tabela.setStyleSheet("""
-            QTableWidget {
-                background-color: white;
-                border-radius: 8px;
-                gridline-color: #dcdcdc;
-            }
+        QTableWidget {
+            background-color: #1f2937;
+            border-radius: 8px;
+            gridline-color: #374151;
+            color: white;
+        }
 
-            QHeaderView::section {
-                background-color: #2c3e50;
-                color: white;
-                padding: 8px;
-                border: none;
-                font-weight: bold;
-            }
+        QHeaderView::section {
+            background-color: #7c3aed;
+            color: white;
+            padding: 8px;
+            border: none;
+            font-weight: bold;
+        }
 
-            QTableWidget::item {
-                padding: 6px;
-            }
+        QTableWidget::item {
+            padding: 6px;
+        }
 
-            QTableWidget::item:selected {
-                background-color: #3498db;
-                color: white;
-            }
+        QTableWidget::item:selected {
+            background-color: #8b5cf6;
+            color: white;
+        }
         """)
 
         self.layout.addWidget(self.tabela)
 
-        # 🔘 BOTÃO ESTILIZADO
         self.botao_atualizar = QPushButton("🔄 Atualizar")
         self.botao_atualizar.setCursor(Qt.PointingHandCursor)
 
         self.botao_atualizar.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border-radius: 8px;
-                padding: 10px;
-                font-weight: bold;
-            }
+        QPushButton {
+            background-color: #7c3aed;
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: bold;
+        }
 
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
+        QPushButton:hover {
+            background-color: #6d28d9;
+        }
 
-            QPushButton:pressed {
-                background-color: #1f618d;
-            }
+        QPushButton:pressed {
+            background-color: #5b21b6;
+        }
         """)
 
         self.layout.addWidget(self.botao_atualizar)
 
         self.botao_atualizar.clicked.connect(self.carregar_dados)
-
 
     def carregar_dados(self):
 
@@ -121,6 +116,7 @@ class Listar:
         self.tabela.setRowCount(len(alunos))
 
         for linha, aluno in enumerate(alunos):
+
             self.tabela.setItem(linha, 0, QTableWidgetItem(str(aluno["id"])))
             self.tabela.setItem(linha, 1, QTableWidgetItem(aluno["nome"]))
             self.tabela.setItem(linha, 2, QTableWidgetItem(aluno["email"]))
